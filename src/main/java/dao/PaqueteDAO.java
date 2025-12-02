@@ -4,7 +4,6 @@ import model.Paquete;
 import com.mycompany.login.util.ConexionBD;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -138,7 +137,7 @@ public class PaqueteDAO {
             ps.setInt(5, p.getDuracionDias());
             ps.setBoolean(6, p.isDisponible());
             ps.setString(7, p.getImagenUrl());
-            ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now())); // Fecha de creación actual
+            ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now())); // Fecha de creación
 
             ps.executeUpdate();
 
@@ -166,6 +165,21 @@ public class PaqueteDAO {
             ps.setString(7, p.getImagenUrl());
             ps.setInt(8, p.getId());
 
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Eliminar paquete
+    public void eliminar(int id) {
+        String sql = "DELETE FROM paquetes WHERE id = ?";
+
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
             ps.executeUpdate();
 
         } catch (SQLException e) {
