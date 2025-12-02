@@ -6,16 +6,17 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import com.mycompany.login.util.ConexionBD;
+import java.sql.Connection;
 
 public class ReservaDAO {
 
-    private Conexion conexion = new Conexion();
 
     // Guardar una nueva reserva
     public void guardar(Reserva r) {
         String sql = "INSERT INTO reservas(cliente_nombre, paquete_id, fecha, numero_personas, estado) VALUES(?,?,?,?,?)";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, r.getClienteNombre());           // Nombre del cliente
@@ -39,7 +40,7 @@ public class ReservaDAO {
                      "FROM reservas r " +
                      "LEFT JOIN paquetes p ON r.paquete_id = p.id";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -78,7 +79,7 @@ public class ReservaDAO {
                      "LEFT JOIN paquetes p ON r.paquete_id = p.id " +
                      "WHERE r.id = ?";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
