@@ -32,7 +32,7 @@ public class ClienteDAO {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM clientes";
 
-        try (Connection conn = Conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
