@@ -1,25 +1,28 @@
 package dao;
 
 import model.Paquete;
-import java.sql.*;
+import com.mycompany.login.util.ConexionBD;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import com.mycompany.login.util.ConexionBD;
-import java.sql.Connection;
 
 public class PaqueteDAO {
-
-    
 
     // Listar todos los paquetes
     public List<Paquete> listar() {
         List<Paquete> paquetes = new ArrayList<>();
         String sql = "SELECT * FROM paquetes ORDER BY id";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -32,7 +35,12 @@ public class PaqueteDAO {
                 p.setDuracionDias(rs.getInt("duracion_dias"));
                 p.setDisponible(rs.getBoolean("disponible"));
                 p.setImagenUrl(rs.getString("imagen_url"));
-                p.setFechaCreacion(rs.getTimestamp("fecha_creacion").toLocalDateTime());
+
+                Timestamp ts = rs.getTimestamp("fecha_creacion");
+                if (ts != null) {
+                    p.setFechaCreacion(ts.toLocalDateTime());
+                }
+
                 paquetes.add(p);
             }
 
@@ -48,8 +56,8 @@ public class PaqueteDAO {
         List<Paquete> paquetes = new ArrayList<>();
         String sql = "SELECT * FROM paquetes WHERE disponible = true ORDER BY id";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -62,7 +70,12 @@ public class PaqueteDAO {
                 p.setDuracionDias(rs.getInt("duracion_dias"));
                 p.setDisponible(rs.getBoolean("disponible"));
                 p.setImagenUrl(rs.getString("imagen_url"));
-                p.setFechaCreacion(rs.getTimestamp("fecha_creacion").toLocalDateTime());
+
+                Timestamp ts = rs.getTimestamp("fecha_creacion");
+                if (ts != null) {
+                    p.setFechaCreacion(ts.toLocalDateTime());
+                }
+
                 paquetes.add(p);
             }
 
@@ -78,10 +91,11 @@ public class PaqueteDAO {
         Paquete p = null;
         String sql = "SELECT * FROM paquetes WHERE id = ?";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     p = new Paquete();
@@ -93,7 +107,11 @@ public class PaqueteDAO {
                     p.setDuracionDias(rs.getInt("duracion_dias"));
                     p.setDisponible(rs.getBoolean("disponible"));
                     p.setImagenUrl(rs.getString("imagen_url"));
-                    p.setFechaCreacion(rs.getTimestamp("fecha_creacion").toLocalDateTime());
+
+                    Timestamp ts = rs.getTimestamp("fecha_creacion");
+                    if (ts != null) {
+                        p.setFechaCreacion(ts.toLocalDateTime());
+                    }
                 }
             }
 
@@ -106,11 +124,12 @@ public class PaqueteDAO {
 
     // Guardar nuevo paquete
     public void guardar(Paquete p) {
-        String sql = "INSERT INTO paquetes(nombre, destino, precio, descripcion, duracion_dias, disponible, imagen_url, fecha_creacion) " +
-                     "VALUES(?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO paquetes " +
+                     "(nombre, destino, precio, descripcion, duracion_dias, disponible, imagen_url, fecha_creacion) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
 
             ps.setString(1, p.getNombre());
             ps.setString(2, p.getDestino());
@@ -130,10 +149,13 @@ public class PaqueteDAO {
 
     // Actualizar paquete
     public void actualizar(Paquete p) {
-        String sql = "UPDATE paquetes SET nombre=?, destino=?, precio=?, descripcion=?, duracion_dias=?, disponible=?, imagen_url=? WHERE id=?";
+        String sql = "UPDATE paquetes " +
+                     "SET nombre = ?, destino = ?, precio = ?, descripcion = ?, duracion_dias = ?, " +
+                     "    disponible = ?, imagen_url = ? " +
+                     "WHERE id = ?";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
 
             ps.setString(1, p.getNombre());
             ps.setString(2, p.getDestino());
