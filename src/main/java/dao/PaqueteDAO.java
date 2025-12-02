@@ -6,17 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.mycompany.login.util.ConexionBD;
+import java.sql.Connection;
 
 public class PaqueteDAO {
 
-    private Conexion conexion = new Conexion();
+    
 
     // Listar todos los paquetes
     public List<Paquete> listar() {
         List<Paquete> paquetes = new ArrayList<>();
         String sql = "SELECT * FROM paquetes ORDER BY id";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -46,7 +48,7 @@ public class PaqueteDAO {
         List<Paquete> paquetes = new ArrayList<>();
         String sql = "SELECT * FROM paquetes WHERE disponible = true ORDER BY id";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -76,7 +78,7 @@ public class PaqueteDAO {
         Paquete p = null;
         String sql = "SELECT * FROM paquetes WHERE id = ?";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
@@ -107,7 +109,7 @@ public class PaqueteDAO {
         String sql = "INSERT INTO paquetes(nombre, destino, precio, descripcion, duracion_dias, disponible, imagen_url, fecha_creacion) " +
                      "VALUES(?,?,?,?,?,?,?,?)";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, p.getNombre());
@@ -130,7 +132,7 @@ public class PaqueteDAO {
     public void actualizar(Paquete p) {
         String sql = "UPDATE paquetes SET nombre=?, destino=?, precio=?, descripcion=?, duracion_dias=?, disponible=?, imagen_url=? WHERE id=?";
 
-        try (Connection conn = conexion.getConexion();
+        Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, p.getNombre());
