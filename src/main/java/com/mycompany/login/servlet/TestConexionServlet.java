@@ -1,6 +1,7 @@
 package com.mycompany.login.servlet;
 
 import com.mycompany.login.util.ConexionBD;
+import model.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
