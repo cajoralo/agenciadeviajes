@@ -1,8 +1,8 @@
-
 package controller;
 
 import dao.PaqueteDAO;
 import model.Paquete;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -13,86 +13,106 @@ import java.util.List;
 @WebServlet("/paquetes")
 public class PaqueteController extends HttpServlet {
 
-    private PaqueteDAO paqueteDAO = new PaqueteDAO();
+    private final PaqueteDAO paqueteDAO = new PaqueteDAO();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-        switch (action != null ? action : "") {
-            case "listar":
-                // Listar todos los paquetes
-                List<Paquete> paquetes = paqueteDAO.listar();
-                req.setAttribute("paquetes", paquetes);
-                req.getRequestDispatcher("verPaquetes.jsp").forward(req, resp);
-                break;
+        String action = req.getParameter("action");
+        if (action == null || action.isEmpty()) {
+            action = "listar";
+        }
+
+        switch (action) {
 
             case "nuevo":
-                // Mostrar formulario para crear paquete
-                req.getRequestDispatcher("crearPaquete.jsp").forward(req, resp);
+                // Formulario vacío
+                req.getRequestDispatcher("/WEB-INF/views/paquetes/form.jsp")
+                        .forward(req, resp);
                 break;
 
-            case "listarDisponibles":
-                // Listar solo paquetes disponibles
-                List<Paquete> paquetesDisponibles = paqueteDAO.listarDisponibles();
-                req.setAttribute("paquetes", paquetesDisponibles);
-                req.getRequestDispatcher("verPaquetes.jsp").forward(req, resp);
-                break;
-
-            default:
-                // Manejar edición de descripción
-                if (req.getParameter("editar") != null) {
-                    int id = Integer.parseInt(req.getParameter("editar"));
-                    String nuevaDesc = req.getParameter("descripcion_" + id);
-                    Paquete p = paqueteDAO.buscarPorId(id);
-                    if (p != null) {
-                        p.setDescripcion(nuevaDesc);
-                        paqueteDAO.actualizar(p);
-                    }
-                    resp.sendRedirect("paquetes?action=listar");
-                    return;
-                }
-
-                // Buscar paquete por ID (para mostrar info individual)
-                if (req.getParameter("id") != null) {
-                    int id = Integer.parseInt(req.getParameter("id"));
+            case "editar": {
+                String idParam = req.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int id = Integer.parseInt(idParam);
                     Paquete p = paqueteDAO.buscarPorId(id);
                     req.setAttribute("paquete", p);
-                    req.getRequestDispatcher("verPaquete.jsp").forward(req, resp);
+                    req.getRequestDispatcher("/WEB-INF/views/paquetes/form.jsp")
+                            .forward(req, resp);
                     return;
                 }
+                resp.sendRedirect(req.getContextPath() + "/paquetes?action=listar");
+                break;
+            }
 
-                // Si no hay acción válida, redirigir a listar
-                resp.sendRedirect("paquetes?action=listar");
+            case "eliminar": {
+                String idParam = req.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int id = Integer.parseInt(idParam);
+                    paqueteDAO.eliminar(id);
+                }
+                resp.sendRedirect(req.getContextPath() + "/paquetes?action=listar");
+                break;
+            }
+
+            case "listar":
+            default:
+                List<Paquete> paquetes = paqueteDAO.listar();
+                req.setAttribute("paquetes", paquetes);
+                req.getRequestDispatcher("/WEB-INF/views/paquetes/listar.jsp")
+                        .forward(req, resp);
+                break;
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Crear nuevo paquete
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.setCharacterEncoding("UTF-8");
+
+        String idParam = req.getParameter("id");
+        Integer id = (idParam != null && !idParam.isEmpty())
+                ? Integer.parseInt(idParam)
+                : null;
+
         String nombre = req.getParameter("nombre");
         String destino = req.getParameter("destino");
-        String descripcion = req.getParameter("descripcion");
         String precioStr = req.getParameter("precio");
-        String duracionDiasStr = req.getParameter("duracionDias");
+        String descripcion = req.getParameter("descripcion");
+        String duracionStr = req.getParameter("duracionDias");
         String disponibleStr = req.getParameter("disponible");
         String imagenUrl = req.getParameter("imagenUrl");
 
-        BigDecimal precio = new BigDecimal(precioStr);
-        int duracionDias = Integer.parseInt(duracionDiasStr);
-        boolean disponible = Boolean.parseBoolean(disponibleStr);
+        BigDecimal precio = (precioStr != null && !precioStr.isEmpty())
+                ? new BigDecimal(precioStr)
+                : BigDecimal.ZERO;
+
+        int duracionDias = (duracionStr != null && !duracionStr.isEmpty())
+                ? Integer.parseInt(duracionStr)
+                : 0;
+
+        boolean disponible = "on".equalsIgnoreCase(disponibleStr) || "true".equalsIgnoreCase(disponibleStr);
 
         Paquete p = new Paquete();
+        if (id != null) {
+            p.setId(id);
+        }
         p.setNombre(nombre);
         p.setDestino(destino);
-        p.setDescripcion(descripcion);
         p.setPrecio(precio);
+        p.setDescripcion(descripcion);
         p.setDuracionDias(duracionDias);
         p.setDisponible(disponible);
         p.setImagenUrl(imagenUrl);
 
-        paqueteDAO.guardar(p);
+        if (id == null) {
+            paqueteDAO.guardar(p);
+        } else {
+            paqueteDAO.actualizar(p);
+        }
 
-        resp.sendRedirect("paquetes?action=listar");
+        resp.sendRedirect(req.getContextPath() + "/paquetes?action=listar");
     }
 }
