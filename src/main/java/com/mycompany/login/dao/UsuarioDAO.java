@@ -1,6 +1,6 @@
 package com.mycompany.login.dao;
 
-import com.mycompany.login.model.Usuario;
+import model.Usuario;
 import com.mycompany.login.util.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
