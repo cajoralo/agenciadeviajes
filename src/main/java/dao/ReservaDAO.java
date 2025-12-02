@@ -1,27 +1,31 @@
 package dao;
 
 import model.Reserva;
-import model.Paquete;
-import java.sql.*;
+import com.mycompany.login.util.ConexionBD;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.mycompany.login.util.ConexionBD;
-import java.sql.Connection;
 
 public class ReservaDAO {
 
-
-    // Guardar una nueva reserva
+    // INSERTAR una nueva reserva
     public void guardar(Reserva r) {
-        String sql = "INSERT INTO reservas(cliente_nombre, paquete_id, fecha, numero_personas, estado) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO reservas (cliente_id, paquete_id, fecha_reserva, numero_personas, estado) " +
+                     "VALUES (?, ?, ?, ?, ?)";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
 
-            ps.setString(1, r.getClienteNombre());           // Nombre del cliente
-            ps.setInt(2, r.getPaquete().getId());           // ID del paquete
-            ps.setDate(3, Date.valueOf(r.getFecha()));      // LocalDate -> java.sql.Date
+            ps.setInt(1, r.getClienteId());
+            ps.setInt(2, r.getPaqueteId());
+            ps.setDate(3, Date.valueOf(r.getFechaReserva())); // LocalDate -> java.sql.Date
             ps.setInt(4, r.getNumeroPersonas());
             ps.setString(5, r.getEstado());
 
@@ -32,33 +36,30 @@ public class ReservaDAO {
         }
     }
 
-    // Listar todas las reservas
+    // LISTAR todas las reservas
     public List<Reserva> listar() {
         List<Reserva> reservas = new ArrayList<>();
-        String sql = "SELECT r.id, r.cliente_nombre, r.paquete_id, r.fecha, r.numero_personas, r.estado, " +
-                     "p.nombre AS paquete_nombre, p.destino AS paquete_destino, p.imagen_url AS paquete_imagen " +
-                     "FROM reservas r " +
-                     "LEFT JOIN paquetes p ON r.paquete_id = p.id";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "SELECT id, cliente_id, paquete_id, fecha_reserva, numero_personas, estado " +
+                     "FROM reservas";
+
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Reserva r = new Reserva();
                 r.setId(rs.getInt("id"));
-                r.setClienteNombre(rs.getString("cliente_nombre"));
-                r.setFecha(rs.getDate("fecha").toLocalDate());
+                r.setClienteId(rs.getInt("cliente_id"));
+                r.setPaqueteId(rs.getInt("paquete_id"));
+
+                Date fechaSql = rs.getDate("fecha_reserva");
+                if (fechaSql != null) {
+                    r.setFechaReserva(fechaSql.toLocalDate());
+                }
+
                 r.setNumeroPersonas(rs.getInt("numero_personas"));
                 r.setEstado(rs.getString("estado"));
-
-                // Crear objeto Paquete
-                Paquete p = new Paquete();
-                p.setId(rs.getInt("paquete_id"));
-                p.setNombre(rs.getString("paquete_nombre"));
-                p.setDestino(rs.getString("paquete_destino"));
-                p.setImagenUrl(rs.getString("paquete_imagen"));
-                r.setPaquete(p);
 
                 reservas.add(r);
             }
@@ -70,17 +71,15 @@ public class ReservaDAO {
         return reservas;
     }
 
-    // Buscar una reserva por ID
+    // BUSCAR una reserva por ID
     public Reserva buscarPorId(int id) {
         Reserva r = null;
-        String sql = "SELECT r.id, r.cliente_nombre, r.paquete_id, r.fecha, r.numero_personas, r.estado, " +
-                     "p.nombre AS paquete_nombre, p.destino AS paquete_destino, p.imagen_url AS paquete_imagen " +
-                     "FROM reservas r " +
-                     "LEFT JOIN paquetes p ON r.paquete_id = p.id " +
-                     "WHERE r.id = ?";
 
-        Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT id, cliente_id, paquete_id, fecha_reserva, numero_personas, estado " +
+                     "FROM reservas WHERE id = ?";
+
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
@@ -88,17 +87,16 @@ public class ReservaDAO {
                 if (rs.next()) {
                     r = new Reserva();
                     r.setId(rs.getInt("id"));
-                    r.setClienteNombre(rs.getString("cliente_nombre"));
-                    r.setFecha(rs.getDate("fecha").toLocalDate());
+                    r.setClienteId(rs.getInt("cliente_id"));
+                    r.setPaqueteId(rs.getInt("paquete_id"));
+
+                    Date fechaSql = rs.getDate("fecha_reserva");
+                    if (fechaSql != null) {
+                        r.setFechaReserva(fechaSql.toLocalDate());
+                    }
+
                     r.setNumeroPersonas(rs.getInt("numero_personas"));
                     r.setEstado(rs.getString("estado"));
-
-                    Paquete p = new Paquete();
-                    p.setId(rs.getInt("paquete_id"));
-                    p.setNombre(rs.getString("paquete_nombre"));
-                    p.setDestino(rs.getString("paquete_destino"));
-                    p.setImagenUrl(rs.getString("paquete_imagen"));
-                    r.setPaquete(p);
                 }
             }
 
@@ -107,5 +105,44 @@ public class ReservaDAO {
         }
 
         return r;
+    }
+
+    // ACTUALIZAR una reserva existente
+    public void actualizar(Reserva r) {
+        String sql = "UPDATE reservas " +
+                     "SET cliente_id = ?, paquete_id = ?, fecha_reserva = ?, " +
+                     "    numero_personas = ?, estado = ? " +
+                     "WHERE id = ?";
+
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, r.getClienteId());
+            ps.setInt(2, r.getPaqueteId());
+            ps.setDate(3, Date.valueOf(r.getFechaReserva()));
+            ps.setInt(4, r.getNumeroPersonas());
+            ps.setString(5, r.getEstado());
+            ps.setInt(6, r.getId());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ELIMINAR una reserva
+    public void eliminar(int id) {
+        String sql = "DELETE FROM reservas WHERE id = ?";
+
+        try (Connection cn = ConexionBD.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
