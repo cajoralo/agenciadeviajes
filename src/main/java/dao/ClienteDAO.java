@@ -1,17 +1,19 @@
 package dao;
 
 import model.Cliente;
+import com.mycompany.login.util.ConexionBD;
 import java.sql.*;
 import java.util.*;
+import java.sql.Connection;
 
 public class ClienteDAO {
 
-    private Conexion Conexion = new Conexion();
+    
 
     public void guardar(Cliente c) {
         String sql = "INSERT INTO clientes(nombre,email,telefono,direccion) VALUES(?,?,?,?)";
 
-        try (Connection conn = Conexion.getConexion();
+       Connection cn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, c.getNombre());
