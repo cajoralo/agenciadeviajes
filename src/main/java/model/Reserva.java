@@ -1,32 +1,57 @@
 package model;
 
 import java.time.LocalDate;
-import model.Paquete;
 
 public class Reserva {
+    
     private int id;
-    private String clienteNombre;  // Nombre del cliente
-    private Paquete paquete;       // Paquete reservado
-    private LocalDate fecha;       // Fecha de reserva
+    private int clienteId;       // ID del cliente
+    private int paqueteId;       // ID del paquete
+    private LocalDate fechaReserva;
     private int numeroPersonas;
     private String estado;
 
-    // Getters y Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    // GETTERS Y SETTERS
 
-    public String getClienteNombre() { return clienteNombre; }
-    public void setClienteNombre(String clienteNombre) { this.clienteNombre = clienteNombre; }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public Paquete getPaquete() { return paquete; }
-    public void setPaquete(Paquete paquete) { this.paquete = paquete; }
+    public int getClienteId() {
+        return clienteId;
+    }
+    public void setClienteId(int clienteId) {
+        this.clienteId = clienteId;
+    }
 
-    public LocalDate getFecha() { return fecha; }
-    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+    public int getPaqueteId() {
+        return paqueteId;
+    }
+    public void setPaqueteId(int paqueteId) {
+        this.paqueteId = paqueteId;
+    }
 
-    public int getNumeroPersonas() { return numeroPersonas; }
-    public void setNumeroPersonas(int numeroPersonas) { this.numeroPersonas = numeroPersonas; }
+    public LocalDate getFechaReserva() {
+        return fechaReserva;
+    }
+    public void setFechaReserva(LocalDate fechaReserva) {
+        this.fechaReserva = fechaReserva;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public int getNumeroPersonas() {
+        return numeroPersonas;
+    }
+    public void setNumeroPersonas(int numeroPersonas) {
+        this.numeroPersonas = numeroPersonas;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }
