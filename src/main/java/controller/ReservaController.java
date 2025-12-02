@@ -1,4 +1,3 @@
-
 package controller;
 
 import dao.PaqueteDAO;
@@ -16,26 +15,44 @@ import java.util.List;
 @WebServlet("/reservas")
 public class ReservaController extends HttpServlet {
 
-    private ReservaDAO reservaDAO = new ReservaDAO();
-    private PaqueteDAO paqueteDAO = new PaqueteDAO();
+    private final ReservaDAO reservaDAO = new ReservaDAO();
+    private final PaqueteDAO paqueteDAO = new PaqueteDAO();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-        if ("listar".equals(action)) {
-            List<Reserva> reservas = reservaDAO.listar();
-            req.setAttribute("reservas", reservas);
-            req.getRequestDispatcher("verReservas.jsp").forward(req, resp);
-        } else if ("nuevo".equals(action)) {
-            List<Paquete> paquetesDisponibles = paqueteDAO.listarDisponibles();
-            req.setAttribute("paquetesDisponibles", paquetesDisponibles);
-            req.getRequestDispatcher("nuevaReserva.jsp").forward(req, resp);
+        String action = req.getParameter("action");
+        if (action == null || action.isEmpty()) {
+            action = "listar";
+        }
+
+        switch (action) {
+            case "nuevo":
+                // Cargar paquetes disponibles para el formulario
+                List<Paquete> paquetesDisponibles = paqueteDAO.listarDisponibles();
+                req.setAttribute("paquetesDisponibles", paquetesDisponibles);
+                req.getRequestDispatcher("/WEB-INF/views/reservas/form.jsp")
+                        .forward(req, resp);
+                break;
+
+            case "listar":
+            default:
+                // Cargar todas las reservas y enviarlas a la vista
+                List<Reserva> reservas = reservaDAO.listar();
+                req.setAttribute("reservas", reservas);
+                req.getRequestDispatcher("/WEB-INF/views/reservas/listar.jsp")
+                        .forward(req, resp);
+                break;
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.setCharacterEncoding("UTF-8");
+
         String clienteNombre = req.getParameter("clienteNombre");
         int paqueteId = Integer.parseInt(req.getParameter("paqueteId"));
         LocalDate fecha = LocalDate.parse(req.getParameter("fecha"));
@@ -53,6 +70,7 @@ public class ReservaController extends HttpServlet {
 
         reservaDAO.guardar(r);
 
-        resp.sendRedirect("reservas?action=listar");
+        // Redirigir usando el context path para que funcione en cualquier servidor/ruta
+        resp.sendRedirect(req.getContextPath() + "/reservas?action=listar");
     }
 }
