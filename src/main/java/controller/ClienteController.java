@@ -1,4 +1,3 @@
-
 package controller;
 
 import dao.ClienteDAO;
@@ -12,34 +11,96 @@ import java.util.List;
 
 @WebServlet("/clientes")
 public class ClienteController extends HttpServlet {
-    private ClienteDAO clienteDAO = new ClienteDAO();
+
+    private final ClienteDAO clienteDAO = new ClienteDAO();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         String action = req.getParameter("action");
-        if ("nuevo".equals(action)) {
-            req.getRequestDispatcher("nuevoCliente.jsp").forward(req, resp);
-        } else if ("listar".equals(action)) {
-            List<Cliente> clientes = clienteDAO.listar();
-            req.setAttribute("clientes", clientes);
-            req.getRequestDispatcher("verCliente.jsp").forward(req, resp);
-        } else {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (action == null || action.isEmpty()) {
+            action = "listar";
+        }
+
+        switch (action) {
+            case "nuevo":
+                // Formulario vacío para nuevo cliente
+                req.getRequestDispatcher("/WEB-INF/views/clientes/form.jsp")
+                        .forward(req, resp);
+                break;
+
+            case "editar": {
+                // Cargar cliente por id y mandar al formulario
+                String idParam = req.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int id = Integer.parseInt(idParam);
+                    Cliente c = clienteDAO.buscarPorId(id); // método agregado en ClienteDAO
+                    if (c != null) {
+                        req.setAttribute("cliente", c);
+                        req.getRequestDispatcher("/WEB-INF/views/clientes/form.jsp")
+                                .forward(req, resp);
+                        return;
+                    }
+                }
+                // Si algo falla, volver a listar
+                resp.sendRedirect(req.getContextPath() + "/clientes?action=listar");
+                break;
+            }
+
+            case "eliminar": {
+                String idParam = req.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int id = Integer.parseInt(idParam);
+                    clienteDAO.eliminar(id); // método agregado en ClienteDAO
+                }
+                resp.sendRedirect(req.getContextPath() + "/clientes?action=listar");
+                break;
+            }
+
+            case "listar":
+            default:
+                List<Cliente> clientes = clienteDAO.listar();
+                req.setAttribute("clientes", clientes);
+                req.getRequestDispatcher("/WEB-INF/views/clientes/listar.jsp")
+                        .forward(req, resp);
+                break;
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.setCharacterEncoding("UTF-8");
+
+        String idParam = req.getParameter("id");
+        Integer id = (idParam != null && !idParam.isEmpty())
+                ? Integer.parseInt(idParam)
+                : null;
+
         String nombre = req.getParameter("nombre");
         String email = req.getParameter("email");
         String telefono = req.getParameter("telefono");
+        String direccion = req.getParameter("direccion");
 
         Cliente c = new Cliente();
+        if (id != null) {
+            c.setId(id);
+        }
         c.setNombre(nombre);
         c.setEmail(email);
         c.setTelefono(telefono);
+        c.setDireccion(direccion);
 
-        clienteDAO.guardar(c);
-        resp.sendRedirect("clientes?action=listar");
+        if (id == null) {
+            // nuevo
+            clienteDAO.guardar(c);
+        } else {
+            // actualización
+            clienteDAO.actualizar(c);
+        }
+
+        resp.sendRedirect(req.getContextPath() + "/clientes?action=listar");
     }
 }
