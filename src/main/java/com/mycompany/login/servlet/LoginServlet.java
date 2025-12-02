@@ -1,7 +1,7 @@
 package com.mycompany.login.servlet;
 
 import com.mycompany.login.dao.UsuarioDAO;
-import com.mycompany.login.model.Usuario;
+import model.Usuario;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
