@@ -41,7 +41,7 @@
     </div>
 
     <button class="btn btn-primary">Guardar</button>
-    <a class="btn btn-secondary" href="${pageContext.request.contextPath}/clientes">Cancelar</a>
+    <a class="btn btn-secondary" href="${pageContext.request.contextPath}/index.jsp">Cancelar</a>
   </form>
 
 </div>

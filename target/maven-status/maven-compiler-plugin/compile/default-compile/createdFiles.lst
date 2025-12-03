@@ -10,8 +10,6 @@ com\mycompany\login\servlet\TestConexionServlet.class
 controller\ReservaController.class
 com\mycompany\login\servlet\RecuperarPasswordServlet.class
 controller\ClienteController.class
-dao\Conexion.class
-com\mycompany\login\model\Usuario.class
 model\Cliente.class
 controller\PaqueteController.class
 model\Paquete.class

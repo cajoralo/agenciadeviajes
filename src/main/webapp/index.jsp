@@ -1,9 +1,10 @@
+<%@page import="java.lang.Object"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="dao.ClienteDAO, dao.PaqueteDAO, dao.ReservaDAO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Usuario" %>
 
-<%
+    <%
     // ==== CONTROL DE SESIÓN ====
     Object obj = session.getAttribute("usuarioLogueado");
     Usuario u = null;

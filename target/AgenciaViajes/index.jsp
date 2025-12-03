@@ -1,11 +1,18 @@
+<%@page import="java.lang.Object"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="dao.ClienteDAO, dao.PaqueteDAO, dao.ReservaDAO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.mycompany.login.model.Usuario" %>
+<%@ page import="model.Usuario" %>
 
-<%
+    <%
     // ==== CONTROL DE SESIÓN ====
-    Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
+    Object obj = session.getAttribute("usuarioLogueado");
+    Usuario u = null;
+
+    if (obj instanceof Usuario) {
+        u = (Usuario) obj;
+    }
+
     if (u == null) {
         response.sendRedirect("login.jsp");
         return;
