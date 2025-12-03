@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.mycompany.login.model.Usuario" %>
+<%@ page import="model.Usuario" %>
 
 <%
     Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
