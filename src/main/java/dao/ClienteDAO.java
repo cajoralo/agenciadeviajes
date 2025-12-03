@@ -107,16 +107,42 @@ public class ClienteDAO {
 
     // (Opcional) Eliminar cliente
     public void eliminar(int id) {
-        String sql = "DELETE FROM clientes WHERE id = ?";
+    String sql = "DELETE FROM clientes WHERE id = ?";
 
-        try (Connection cn = ConexionBD.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql)) {
+    try (Connection cn = ConexionBD.getConnection();
+         PreparedStatement ps = cn.prepareStatement(sql)) {
 
-            ps.setInt(1, id);
-            ps.executeUpdate();
+        ps.setInt(1, id);
+        ps.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+    public Cliente obtenerPorId(int id) {
+    Cliente cliente = null;
+
+    try (Connection conn = ConexionBD.getConnection();
+         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM clientes WHERE id = ?")) {
+
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            cliente = new Cliente();
+            cliente.setId(rs.getInt("id"));
+            cliente.setNombre(rs.getString("nombre"));
+            cliente.setEmail(rs.getString("email"));
+            cliente.setTelefono(rs.getString("telefono"));
+            cliente.setDireccion(rs.getString("direccion"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return cliente;
+}
+
+
 }

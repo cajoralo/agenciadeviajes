@@ -36,7 +36,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Agencia de Viajes - Sistema de Gestión</title>
+    <title>Agencia de Viajes TRAVEXA - Sistema de Gestión</title>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -127,7 +127,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark top-navbar">
     <div class="container">
         <a class="navbar-brand" href="index.jsp">
-            <i class="fas fa-plane-departure me-2"></i>Agencia de Viajes
+            <i class="fas fa-plane-departure me-2"></i>Agencia de Viajes TRAVEXA
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
@@ -157,15 +157,59 @@
     <div class="hero-section">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold">🏝️ Agencia de Viajes</h1>
+                <h1 class="display-4 fw-bold">🏝️ TRAVEXA</h1>
                 <p class="lead">Sistema integral de gestión para tu agencia de viajes</p>
                 <p>Gestiona clientes, paquetes turísticos y reservas de manera eficiente</p>
             </div>
             <div class="col-lg-4 text-center">
-                <i class="fas fa-plane-departure" style="font-size: 8rem;"></i>
+                <img src="https://i.imgur.com/lSds2eb.png" alt="Logo Agencia" style="height:250px;">
             </div>
+
         </div>
     </div>
+    
+    <!-- Banner Promocional Animado -->
+    <style>
+        /* Banner promocional animado */
+        .promo-banner {
+            background: linear-gradient(90deg, #0ea5e9, #2563eb);
+             color: white;
+             padding: 12px;
+             border-radius: 10px;
+             overflow: hidden;
+             margin-top: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .promo-text {
+            white-space: nowrap;
+            display: inline-block;
+            padding-left: 100%;
+            animation: scrollPromo 55s linear infinite;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes scrollPromo {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-100%); }
+        }
+    </style>
+
+    <div class="promo-banner">
+         <div class="promo-text">
+        🎄✨ ¡PROMOCIÓN NAVIDEÑA EN TRAVEXA! ✨🎄  
+        | 🌎 Viaja a los mejores destinos internacionales con hasta 40% de DESCUENTO en paquetes completos.  
+        | 🎁 Promoción válida por temporada navideña y fin de año. ¡Reserva antes de que se agoten los lugares!   
+        | 🏨 Incluye hoteles seleccionados, transporte, tours guiados y asistencia personalizada las 24 horas.  
+        | ✈️ Aprovecha vuelos especiales con tarifas reducidas y flexibilidad en cambios.  
+        | 🎅 Regala un viaje inolvidable: sorprende a tu familia con experiencias únicas este año.  
+        | 🎆 TRAVEXA te desea unas Felices Fiestas, un próspero Año Nuevo y miles de aventuras por descubrir.  
+        | 🧳 Empieza a preparar tus maletas… ¡tu próximo destino te está esperando!  
+        </div>
+    </div>
+
 
     <!-- Estadísticas -->
     <div class="row mb-5">
