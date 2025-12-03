@@ -5,7 +5,13 @@
 
 <%
     // ==== CONTROL DE SESIÓN ====
-    Usuario u = (Usuario) session.getAttribute("usuarioLogueado");
+    Object obj = session.getAttribute("usuarioLogueado");
+    Usuario u = null;
+
+    if (obj instanceof Usuario) {
+        u = (Usuario) obj;
+    }
+
     if (u == null) {
         response.sendRedirect("login.jsp");
         return;
