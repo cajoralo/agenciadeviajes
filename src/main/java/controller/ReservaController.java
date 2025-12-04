@@ -65,12 +65,19 @@ public class ReservaController extends HttpServlet {
             }
 
             case "listar":
-            default:
-                List<Reserva> reservas = reservaDAO.listar();
-                req.setAttribute("reservas", reservas);
-                req.getRequestDispatcher("/WEB-INF/views/reservas/listar.jsp")
-                        .forward(req, resp);
-                break;
+                default:
+                 List<Reserva> reservas = reservaDAO.listar();
+                 List<Cliente> clientes = clienteDAO.listar();
+                 List<Paquete> paquetes = paqueteDAO.listar();
+
+                 req.setAttribute("reservas", reservas);
+                 req.setAttribute("clientes", clientes);
+                 req.setAttribute("paquetes", paquetes);
+
+                 req.getRequestDispatcher("/WEB-INF/views/reservas/listar.jsp")
+                 .forward(req, resp);
+            break;
+
         }
     }
 

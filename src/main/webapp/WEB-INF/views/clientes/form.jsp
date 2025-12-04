@@ -87,13 +87,27 @@
                         </div>
 
                         <div class="d-flex justify-content-end gap-2 mt-3">
-                            <a class="btn btn-secondary"
-                               href="${pageContext.request.contextPath}/index.jsp">Cancelar</a>
-                            <button class="btn btn-primary" type="submit">
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
+
+    <!-- Botón Cancelar -> vuelve al listado de clientes -->
+    <a class="btn btn-secondary"
+       href="${pageContext.request.contextPath}/clientes?action=listar">
+        Cancelar
+    </a>
+
+    <!-- Botón Guardar -->
+    <button class="btn btn-primary" type="submit">
+        Guardar
+    </button>
+
+    <!-- Botón Volver al inicio -->
+    <a class="btn btn-outline-primary"
+       href="${pageContext.request.contextPath}/index.jsp">
+        ← Volver al inicio
+    </a>
+
+</div>
+</form>
+
                 </div>
             </div>
 

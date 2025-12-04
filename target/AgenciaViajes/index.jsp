@@ -4,7 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Usuario" %>
 
-    <%
+<%
     // ==== CONTROL DE SESIÓN ====
     Object obj = session.getAttribute("usuarioLogueado");
     Usuario u = null;
@@ -40,6 +40,7 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
             background: #f8f9fa;
@@ -119,6 +120,30 @@
             margin-top: 50px;
             color: #6c757d;
         }
+
+        /* Banner promocional animado */
+        .promo-banner {
+            background: linear-gradient(90deg, #0ea5e9, #2563eb);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .promo-text {
+            white-space: nowrap;
+            display: inline-block;
+            padding-left: 100%;
+            animation: scrollPromo 55s linear infinite;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        @keyframes scrollPromo {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-100%); }
+        }
     </style>
 </head>
 <body>
@@ -153,6 +178,44 @@
 
 <div class="container">
 
+    <!-- CARRUSEL DE DESTINOS -->
+    <div id="carouselDestinos" class="carousel slide mt-3 mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" class="d-block w-100"
+                     style="height:350px; object-fit:cover;">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Explora el mundo</h5>
+                    <p>Descubre playas, ciudades y aventuras inolvidables.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" class="d-block w-100"
+                     style="height:350px; object-fit:cover;">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Viajes de ensueño</h5>
+                    <p>Ofertas especiales todo el año para tus clientes.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98" class="d-block w-100"
+                     style="height:350px; object-fit:cover;">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Paquetes personalizados</h5>
+                    <p>La experiencia perfecta para cada tipo de viajero.</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselDestinos" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselDestinos" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+    <!-- FIN CARRUSEL -->
+
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="row align-items-center">
@@ -164,55 +227,25 @@
             <div class="col-lg-4 text-center">
                 <img src="https://i.imgur.com/lSds2eb.png" alt="Logo Agencia" style="height:250px;">
             </div>
-
         </div>
     </div>
-    
+
     <!-- Banner Promocional Animado -->
-    <style>
-        /* Banner promocional animado */
-        .promo-banner {
-            background: linear-gradient(90deg, #0ea5e9, #2563eb);
-             color: white;
-             padding: 12px;
-             border-radius: 10px;
-             overflow: hidden;
-             margin-top: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .promo-text {
-            white-space: nowrap;
-            display: inline-block;
-            padding-left: 100%;
-            animation: scrollPromo 55s linear infinite;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        @keyframes scrollPromo {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-100%); }
-        }
-    </style>
-
     <div class="promo-banner">
-         <div class="promo-text">
-        🎄✨ ¡PROMOCIÓN NAVIDEÑA EN TRAVEXA! ✨🎄  
-        | 🌎 Viaja a los mejores destinos internacionales con hasta 40% de DESCUENTO en paquetes completos.  
-        | 🎁 Promoción válida por temporada navideña y fin de año. ¡Reserva antes de que se agoten los lugares!   
-        | 🏨 Incluye hoteles seleccionados, transporte, tours guiados y asistencia personalizada las 24 horas.  
-        | ✈️ Aprovecha vuelos especiales con tarifas reducidas y flexibilidad en cambios.  
-        | 🎅 Regala un viaje inolvidable: sorprende a tu familia con experiencias únicas este año.  
-        | 🎆 TRAVEXA te desea unas Felices Fiestas, un próspero Año Nuevo y miles de aventuras por descubrir.  
-        | 🧳 Empieza a preparar tus maletas… ¡tu próximo destino te está esperando!  
+        <div class="promo-text">
+            🎄✨ ¡PROMOCIÓN NAVIDEÑA EN TRAVEXA! ✨🎄
+            | 🌎 Viaja a los mejores destinos internacionales con hasta 40% de DESCUENTO en paquetes completos.
+            | 🎁 Promoción válida por temporada navideña y fin de año. ¡Reserva antes de que se agoten los lugares!
+            | 🏨 Incluye hoteles seleccionados, transporte, tours guiados y asistencia personalizada las 24 horas.
+            | ✈️ Aprovecha vuelos especiales con tarifas reducidas y flexibilidad en cambios.
+            | 🎅 Regala un viaje inolvidable: sorprende a tu familia con experiencias únicas este año.
+            | 🎆 TRAVEXA te desea unas Felices Fiestas, un próspero Año Nuevo y miles de aventuras por descubrir.
+            | 🧳 Empieza a preparar tus maletas… ¡tu próximo destino te está esperando!
         </div>
     </div>
-
 
     <!-- Estadísticas -->
-    <div class="row mb-5">
+    <div class="row mb-5 mt-4">
         <div class="col-md-4">
             <div class="stat-card">
                 <div class="stat-number"><%= totalClientes %></div>
@@ -284,6 +317,27 @@
             </div>
         </div>
     </div>
+
+    <!-- RESERVA RÁPIDA -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div>
+                        <h5 class="mb-1">Reserva rápida</h5>
+                        <p class="text-muted mb-0">
+                            Crea una nueva reserva en pocos clics para tus clientes frecuentes.
+                        </p>
+                    </div>
+                    <a href="reservas?action=nueva"
+                       class="btn btn-primary mt-3 mt-md-0">
+                        📝 Crear nueva reserva
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FIN RESERVA RÁPIDA -->
 
     <!-- Estado de la Base de Datos -->
     <div class="row mt-5">

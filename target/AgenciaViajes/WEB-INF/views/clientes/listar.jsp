@@ -41,48 +41,49 @@
             font-size: 0.75rem;
             color: #6c757d;
         }
+
         /* Sombra y bordes suaves de la tabla */
-.table-container {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
 
-/* Fila resaltada al pasar mouse */
-.table-hover tbody tr:hover {
-    background-color: #f7faff !important;
-    cursor: pointer;
-}
+        /* Fila resaltada al pasar mouse */
+        .table-hover tbody tr:hover {
+            background-color: #f7faff !important;
+            cursor: pointer;
+        }
 
-/* IDs como etiqueta */
-.badge-id {
-    background-color: #0d6efd;
-    padding: 6px 10px;
-    font-size: 0.75rem;
-}
+        /* IDs como etiqueta */
+        .badge-id {
+            background-color: #0d6efd;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
 
-/* Teléfonos como etiqueta */
-.badge-tel {
-    background-color: #6c757d;
-    padding: 6px 10px;
-    font-size: 0.75rem;
-}
+        /* Teléfonos como etiqueta */
+        .badge-tel {
+            background-color: #6c757d;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+        }
 
-/* Cabeceras más elegantes */
-.table thead th {
-    font-weight: 600;
-    color: #495057;
-    background-color: #f1f3f5 !important;
-}
+        /* Cabeceras más elegantes */
+        .table thead th {
+            font-weight: 600;
+            color: #495057;
+            background-color: #f1f3f5 !important;
+        }
 
-/* Contador inferior */
-.page-info {
-    font-size: 0.95rem;
-    color: #6c757d;
-    font-style: italic;
-    margin-top: 10px;
-}
+        /* Contador inferior */
+        .page-info {
+            font-size: 0.95rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 10px;
+        }
 
     </style>
 </head>
@@ -119,7 +120,13 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Clientes</h3>
         <div>
-            <a class="btn btn-success" href="${pageContext.request.contextPath}/clientes?action=nuevo">
+            <!-- BOTÓN PARA VOLVER AL INDEX -->
+            <a class="btn btn-outline-secondary me-2"
+               href="${pageContext.request.contextPath}/index.jsp">
+                🏠 Inicio
+            </a>
+
+            <a class="btn btn-success me-2" href="${pageContext.request.contextPath}/clientes?action=nuevo">
                 ➕ Nuevo Cliente
             </a>
             <a class="btn btn-link" href="${pageContext.request.contextPath}/paquetes">Paquetes</a>
@@ -143,7 +150,7 @@
     </div>
 
     <div class="table-responsive table-container">
-    <table id="tablaClientes" class="table table-striped table-hover align-middle">
+        <table id="tablaClientes" class="table table-striped table-hover align-middle">
             <thead class="table-light">
             <tr>
                 <th class="sortable" data-col="id">ID</th>
@@ -162,14 +169,14 @@
             %>
             <tr>
                 <td data-label="ID">
-    <span class="badge badge-id">#<%= c.getId() %></span>
-</td>
+                    <span class="badge badge-id">#<%= c.getId() %></span>
+                </td>
 
                 <td data-label="Nombre" data-col="nombre"><%= c.getNombre() %></td>
                 <td data-label="Email" data-col="email"><%= c.getEmail() %></td>
                 <td data-label="Teléfono">
-    <span class="badge badge-tel"><%= c.getTelefono() %></span>
-</td>
+                    <span class="badge badge-tel"><%= c.getTelefono() %></span>
+                </td>
 
                 <td data-label="Dirección" data-col="direccion"><%= c.getDireccion() %></td>
                 <td data-label="Acciones">
@@ -226,7 +233,7 @@
                         aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                 <p id="textoEliminar">¿Seguro que deseas eliminar al cliente?</p>
+                <p id="textoEliminar">¿Seguro que deseas eliminar al cliente?</p>
             </div>
 
             <div class="modal-footer">
@@ -256,41 +263,40 @@
     let currentSortCol = null;
     let sortAsc = true;
 
-   function renderTable() {
-    tbody.innerHTML = '';
+    function renderTable() {
+        tbody.innerHTML = '';
 
-    const total = filteredRows.length;
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const pageRows = filteredRows.slice(start, end);
+        const total = filteredRows.length;
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const pageRows = filteredRows.slice(start, end);
 
-    // === SI NO HAY REGISTROS: MOSTRAR MENSAJE ===
-    if (total === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="text-center py-4 text-muted">
-                    😕 No hay clientes registrados.
-                </td>
-            </tr>
-        `;
-        pageInfo.textContent = "";
-        prevPageBtn.disabled = true;
-        nextPageBtn.disabled = true;
-        return;
+        // === SI NO HAY REGISTROS: MOSTRAR MENSAJE ===
+        if (total === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        😕 No hay clientes registrados.
+                    </td>
+                </tr>
+            `;
+            pageInfo.textContent = "";
+            prevPageBtn.disabled = true;
+            nextPageBtn.disabled = true;
+            return;
+        }
+
+        // === SI HAY REGISTROS: MOSTRAR NORMAL ===
+        pageRows.forEach(row => tbody.appendChild(row));
+
+        const from = start + 1;
+        const to = Math.min(end, total);
+
+        pageInfo.textContent = `Mostrando ${from}-${to} de ${total} clientes`;
+
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = end >= total;
     }
-
-    // === SI HAY REGISTROS: MOSTRAR NORMAL ===
-    pageRows.forEach(row => tbody.appendChild(row));
-
-    const from = start + 1;
-    const to = Math.min(end, total);
-
-    pageInfo.textContent = `Mostrando ${from}-${to} de ${total} clientes`;
-
-    prevPageBtn.disabled = currentPage === 1;
-    nextPageBtn.disabled = end >= total;
-}
-
 
     function applyFilter() {
         const term = searchInput.value.toLowerCase();
